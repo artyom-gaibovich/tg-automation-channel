@@ -2,13 +2,19 @@
   "name": "@tg-automation-channel/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "debug": "nx serve backend",
+    "dev:inspect": "nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register apps/backend/src/main.ts"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.0",
+    "@prisma/client": "5.19.0",
     "axios": "^1.6.0",
+    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
   },
@@ -16,6 +22,7 @@
     "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
+    "@nx-tools/nx-prisma": "^6.8.0",
     "@nx/eslint": "21.3.1",
     "@nx/eslint-plugin": "21.3.1",
     "@nx/jest": "21.3.1",
@@ -37,6 +44,7 @@
     "jest-environment-node": "^30.0.2",
     "nx": "21.3.1",
     "prettier": "^2.6.2",
+    "prisma": "5.19.0",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
