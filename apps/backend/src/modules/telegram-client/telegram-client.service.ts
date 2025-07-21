@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTelegramClientDto } from './dto/create-telegram-client.dto';
-import { UpdateTelegramClientDto } from './dto/update-telegram-client.dto';
-
+import { Injectable, Logger } from '@nestjs/common';
+import { Api, TelegramClient } from 'telegram';
 @Injectable()
 export class TelegramClientService {
-  create(createTelegramClientDto: CreateTelegramClientDto) {
-    return 'This action adds a new telegramClient';
+
+  private readonly logger = new Logger('TelegramClient');
+
+  constructor( private  readonly client: TelegramClient ) {
   }
 
-  findAll() {
-    return `This action returns all telegramClient`;
-  }
+  async fetchLatestPosts(channelUsernames: string[], limit = 5) {
+    const posts = [];
 
-  findOne(id: number) {
-    return `This action returns a #${id} telegramClient`;
-  }
+    for (const username of channelUsernames) {
+      try {
+        const entity = await this.client.getEntity(username);
+        const messages = await this.client.getMessages(entity, { limit });
 
-  update(id: number, updateTelegramClientDto: UpdateTelegramClientDto) {
-    return `This action updates a #${id} telegramClient`;
-  }
+        const parsed = messages.map((msg: Api.Message) => ({
+          channel: username,
+          messageId: msg.id,
+          text: msg.message,
+          date: msg.date,
+        }));
 
-  remove(id: number) {
-    return `This action removes a #${id} telegramClient`;
+        posts.push(...parsed);
+      } catch (err) {
+        if (err instanceof Error) {
+        this.logger.warn(`Cannot fetch from ${username}: ${err.message}`);
+        }
+      }
+    }
+
+    return posts;
   }
 }

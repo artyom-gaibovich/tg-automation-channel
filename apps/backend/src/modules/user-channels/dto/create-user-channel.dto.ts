@@ -1,20 +1,25 @@
-import { IsOptional, IsString } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserChannelDto {
   @IsString()
-  telegramId: string;
+  @IsNotEmpty()
+  userId!: string;
 
   @IsString()
-  title: string;
+  @IsNotEmpty()
+  telegramId!: string;
+
 
   @IsString()
-  userId: string;
+  @IsNotEmpty()
+  title!: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  categoryId?: string;
+  categoryId: string;
 
-  @IsOptional()
-  @IsString()
-  channelsToRewrite?: string;
+  @IsArray()
+  @ArrayMaxSize(100)
+  @IsString({ each: true })
+  channelsToRewrite!: string[];
 }
