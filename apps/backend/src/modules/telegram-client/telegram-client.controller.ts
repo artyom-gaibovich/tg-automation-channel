@@ -1,31 +1,24 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { TelegramClientService } from './telegram-client.service';
-import { CreateTelegramClientDto } from './dto/create-telegram-client.dto';
-import { UpdateTelegramClientDto } from './dto/update-telegram-client.dto';
 
 @Controller('telegram-client')
 export class TelegramClientController {
   constructor(private readonly telegramClientService: TelegramClientService) {}
 
-  @Post()
+  /*  @Post()
   create(@Body() createTelegramClientDto: CreateTelegramClientDto) {
     return this.telegramClientService.create(createTelegramClientDto);
-  }
+  }*/
 
   @Get()
   findAll() {
-    return this.telegramClientService.findAll();
+    return this.telegramClientService.fetchLatestPosts(
+      ['artyom_gaibovich', 'habr_media'],
+      5
+    );
   }
 
-  @Get(':id')
+  /* @Get(':id')
   findOne(@Param('id') id: string) {
     return this.telegramClientService.findOne(+id);
   }
@@ -41,5 +34,5 @@ export class TelegramClientController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.telegramClientService.remove(+id);
-  }
+  }*/
 }
