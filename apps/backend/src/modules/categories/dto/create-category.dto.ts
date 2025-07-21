@@ -4,6 +4,7 @@ export class CreateCategoryDto {
   @IsString()
   name: string;
 
+
   @IsString()
   prompt: string;
 }
