@@ -3,7 +3,7 @@ import { CreateUserChannelDto } from './dto/create-user-channel.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class UserChannelsService {
+export class  UserChannelsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserChannelDto: CreateUserChannelDto) {

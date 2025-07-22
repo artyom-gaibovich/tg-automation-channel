@@ -12,7 +12,7 @@ import { CreateAiAgentDto } from './dto/create-ai-agent.dto';
 import { UpdateAiAgentDto } from './dto/update-ai-agent.dto';
 
 @Controller('ai-agent')
-export class AiAgentController {
+export class  AiAgentController {
   constructor(private readonly aiAgentService: AiAgentService) {}
 
   @Post()

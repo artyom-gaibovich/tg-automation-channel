@@ -36,6 +36,6 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     },
   ],
-  exports: [TelegramClient],
+  exports: [TelegramClient, TelegramClientService],
 })
 export class TelegramClientModule {}

@@ -1,4 +1,8 @@
 {
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "chalk": "^5.4.1"
+  },
   "name": "@tg-automation-channel/backend",
   "version": "0.0.1",
   "private": true,

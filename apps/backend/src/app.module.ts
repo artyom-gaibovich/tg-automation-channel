@@ -4,6 +4,7 @@ import { UsersModule } from './modules/users/users.module';
 import { UserChannelsModule } from './modules/user-channels/user-channels.module';
 import { TelegramClientModule } from './modules/telegram-client/telegram-client.module';
 import { ConfigModule } from '@nestjs/config';
+import { MessagesModule } from './modules/messages/messages.module';
 
 @Module({
   imports: [
@@ -13,8 +14,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     CategoriesModule,
     UsersModule,
-    TelegramClientModule,
-    UserChannelsModule
+    UserChannelsModule,
+    MessagesModule
   ],
   controllers: [],
   providers: [],
