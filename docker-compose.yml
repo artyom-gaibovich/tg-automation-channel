@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  app:
+    networks:
+      - backend_network
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: tg-automation-backend
+    restart: always
+
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env
+
+networks:
+  backend_network:
+    driver: bridge

@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const HTTP_CODE_FROM_PRISMA: Record<string, { status: number; message: string }> = {
 	// operation time out
@@ -109,6 +109,7 @@ export const AXIOS_ERROR_MAPPING: Record<string, { status: number; message: stri
 	Prisma.PrismaClientKnownRequestError,
 	Prisma.PrismaClientUnknownRequestError,
 	Prisma.PrismaClientRustPanicError,
+  AxiosError
 )
 export class HttpExceptionFilter
 	implements
@@ -120,6 +121,7 @@ export class HttpExceptionFilter
 			| Prisma.PrismaClientUnknownRequestError
 			| Prisma.PrismaClientRustPanicError
 			| Error
+      | AxiosError
 		>
 {
 	private readonly logger = new Logger(HttpExceptionFilter.name);
@@ -132,8 +134,6 @@ export class HttpExceptionFilter
 		const request = host.switchToHttp().getRequest<Request>();
 		const response = host.switchToHttp().getResponse<Response>();
 
-
-    console.log('AXIOS_ERROR', exception)
     if (axios.isAxiosError(exception)) {
       const statusCode = exception.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
       const errorMessage = AXIOS_ERROR_MAPPING[String(statusCode)]?.message || 'Internal Server Error';
@@ -142,7 +142,7 @@ export class HttpExceptionFilter
         JSON.stringify({
           message: exception.message,
           method: request.method,
-          url: request.url,
+          endpoint: request.url,
           body: request.body,
           axiosResponse: exception.response?.data,
         }),
@@ -151,6 +151,7 @@ export class HttpExceptionFilter
 
       return response.status(statusCode).json({
         error: errorMessage,
+        apiUrl: exception.request.host ?? 'OK',
         method: request.method,
         url: request.url,
         body: request.body,

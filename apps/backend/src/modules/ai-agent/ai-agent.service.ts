@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateAiAgentDto } from './dto/create-ai-agent.dto';
 import { UpdateAiAgentDto } from './dto/update-ai-agent.dto';
 import axios from 'axios';
@@ -8,31 +8,25 @@ import * as aiAgentInitConfig from './config/ai-agent.init.config';
 export class AiAgentService {
   constructor(private readonly config: aiAgentInitConfig.AIAgentConfig) {}
 
-  async rewrite() {
-    try {
-      const response = await axios.post(
-        this.config.aiAgentAPI + 'OK',
-        {
-          model: this.config.model,
-          messages: [
-            {
-              role: 'user',
-              content: 'Привет :)!',
-            },
-          ],
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.config.token}`,
+  async rewrite(msg: string) {
+    return await axios.post(
+      this.config.aiAgentAPI,
+      {
+        model: this.config.model,
+        messages: [
+          {
+            role: 'user',
+            content: msg,
           },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error('AXIOS');
-      throw error;
-    }
+        ],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.config.token}`,
+        },
+      }
+    );
   }
 
   create(createAiAgentDto: CreateAiAgentDto) {
