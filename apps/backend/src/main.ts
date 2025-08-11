@@ -17,9 +17,17 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     })
   );
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-  );
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://192.168.1.170:5173',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  });
   const port = process.env.PORT || 3002;
 
   await app.listen(port);
@@ -29,6 +37,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-
-

@@ -3,16 +3,16 @@ import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
 export class CreateUserChannelDto {
   @IsString()
   @IsNotEmpty()
-  userId!: string;
+  userId: string;
 
   @IsString()
   @IsNotEmpty()
-  telegramId!: string;
+  telegramId: string;
 
 
   @IsString()
   @IsNotEmpty()
-  title!: string;
+  title: string;
 
   @IsNotEmpty()
   @IsString()
