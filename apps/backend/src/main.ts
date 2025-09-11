@@ -7,9 +7,17 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './utils/http-exception-filter';
+import { YoutubeController } from './modules/youtube/youtube.controller';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const yt = app.get(YoutubeController);
+  const r = await yt.getComments({
+    videoUrl: 'https://www.youtube.com/watch?v=VRhuKMQz700&pp=ugUEEgJydQ%3D%3D',
+    categoryId: '851ba453-d779-42ed-b697-2bee332f0b9a',
+  });
+
+  console.log(r);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(

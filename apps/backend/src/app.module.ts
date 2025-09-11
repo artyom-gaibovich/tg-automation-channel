@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { YoutubeModule } from './modules/youtube/youtube.module';
+import { VkModule } from './modules/vk/vk.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { YoutubeModule } from './modules/youtube/youtube.module';
     UsersModule,
     UserChannelsModule,
     YoutubeModule,
+    VkModule,
   ],
   controllers: [],
   providers: [],
