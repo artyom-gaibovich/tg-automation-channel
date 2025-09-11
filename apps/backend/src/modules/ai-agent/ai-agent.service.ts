@@ -1,9 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAiAgentDto } from './dto/create-ai-agent.dto';
 import { UpdateAiAgentDto } from './dto/update-ai-agent.dto';
+import axios from 'axios';
+import * as aiAgentInitConfig from './config/ai-agent.init.config';
 
 @Injectable()
 export class AiAgentService {
+  constructor(private readonly config: aiAgentInitConfig.AIAgentConfig) {}
+
+  async rewrite(msg: string) {
+    return await axios.post(
+      this.config.aiAgentAPI,
+      {
+        model: this.config.model,
+        messages: [
+          {
+            role: 'user',
+            content: msg,
+          },
+        ],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.config.token}`,
+        },
+      }
+    );
+  }
+
   create(createAiAgentDto: CreateAiAgentDto) {
     return 'This action adds a new aiAgent';
   }
