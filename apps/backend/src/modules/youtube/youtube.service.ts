@@ -6,6 +6,8 @@ import {
 import { UpdateYoutubeDto } from './dto/update-youtube.dto';
 import { YoutubeApi } from './youtube.api';
 import { CategoriesService } from '../categories/categories.service';
+import path from 'path';
+import { extractVideo } from '../../../data';
 
 @Injectable()
 export class YoutubeService {
@@ -63,6 +65,32 @@ export class YoutubeService {
       `,
       tags: videoInfo.tags.join(', '),
     };
+  }
+
+  async translate({
+    categoryId,
+    filename,
+    originalname,
+  }: {
+    categoryId: string;
+    originalname: string;
+    filename: string;
+  }) {
+    const category = await this.categoriesService.findOne(categoryId);
+
+    console.log(originalname);
+    const absPath = path.resolve(process.cwd(), 'uploads', filename);
+    const r1 = await extractVideo(absPath);
+
+    const result = `
+${category.prompt}
+Название видео:
+[вставь название здесь]
+
+Транскрипт:
+      ${r1}
+      `;
+    return { filename, result: result, prompt: category.prompt };
   }
 
   findOne(id: number) {

@@ -1,7 +1,10 @@
 {
   "dependencies": {
     "@nestjs/mapped-types": "*",
-    "chalk": "^5.4.1"
+    "@nestjs/platform-express": "^11.1.6",
+    "chalk": "^5.4.1",
+    "multer": "^2.0.2",
+    "nodejs-whisper": "^0.2.9"
   },
   "name": "@tg-automation-channel/backend",
   "version": "0.0.1",
@@ -92,5 +95,8 @@
         "executor": "@nx-tools/nx-prisma:validate"
       }
     }
+  },
+  "devDependencies": {
+    "@types/multer": "^2.0.0"
   }
 }
