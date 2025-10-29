@@ -4,6 +4,7 @@ import { TelegramClientController } from './telegram-client.controller';
 import { StringSession } from 'telegram/sessions';
 import { TelegramClient } from 'telegram';
 import { ConfigService } from '@nestjs/config';
+import { EnvConfigDev } from '@shared/index';
 
 @Module({
   controllers: [TelegramClientController],
@@ -14,22 +15,27 @@ import { ConfigService } from '@nestjs/config';
       useFactory: async (
         configService: ConfigService
       ): Promise<TelegramClient> => {
-        const apiId = configService.get<string>('API_ID');
+        const apiId = configService.get<string>(EnvConfigDev.ApiId);
         if (!apiId) {
-          throw new Error('No API ID');
+          throw new Error(`Missing ${EnvConfigDev.ApiId}`);
         }
-        const apiHash = configService.get<string>('API_HASH');
+        const apiHash = configService.get<string>(EnvConfigDev.ApiHash);
         if (!apiHash) {
-          throw new Error('Missing API ID');
+          throw new Error(`Missing ${EnvConfigDev.ApiHash}`);
         }
-        const session = configService.get<string>('API_SESSION');
+        const session = configService.get<string>(EnvConfigDev.ApiSession);
         if (!session) {
-          throw new Error('Missing SESSION');
+          throw new Error(`Missing ${EnvConfigDev.ApiSession}`);
         }
         const stringSession = new StringSession(session);
-        const client = new TelegramClient(stringSession, Number(apiId), apiHash, {
-          connectionRetries: 5,
-        });
+        const client = new TelegramClient(
+          stringSession,
+          Number(apiId),
+          apiHash,
+          {
+            connectionRetries: 5,
+          }
+        );
         await client.connect();
         return client;
       },

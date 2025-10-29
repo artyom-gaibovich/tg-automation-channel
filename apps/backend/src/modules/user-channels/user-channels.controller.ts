@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param, Patch,
+  Param,
+  Patch,
   Post,
-  Query
 } from '@nestjs/common';
 import { UserChannelsService } from './user-channels.service';
 import { CreateUserChannelDto } from './dto/create-user-channel.dto';
@@ -20,17 +20,12 @@ export class UserChannelsController {
     return this.userChannelsService.create(createUserChannelDto);
   }
 
-  @Get()
-  findAll(@Query('userId') userId: string) {
-    //return this.userChannelsService.findAll({ userId });
-  }
-
   @Get(':userId')
   findAllByUserId(@Param('userId') userId: string) {
     return this.userChannelsService.findAllByUserId({ userId });
   }
 
-    @Patch(':id')
+  @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateUserChannelDto: UpdateUserChannelDto

@@ -37,6 +37,6 @@ export class CategoriesService {
   remove(id: string) {
     return this.prismaService.category.delete({
       where: { id },
-    })
+    });
   }
 }
