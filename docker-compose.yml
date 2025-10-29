@@ -1,6 +1,8 @@
 version: '3.9'
 services:
   app:
+    depends_on:
+      - db_postgresql
     networks:
       - backend_network
     build:
@@ -8,11 +10,27 @@ services:
       dockerfile: apps/backend/Dockerfile
     container_name: tg-automation-backend
     restart: always
-
     ports:
       - "3002:3002"
     env_file:
       - .env
+  db_postgresql:
+    container_name: db_postgresql
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    image: postgres:14.3-alpine
+    networks:
+      - network_backend
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 networks:
   backend_network:

@@ -6,14 +6,15 @@ import {
 import { UpdateYoutubeDto } from './dto/update-youtube.dto';
 import { YoutubeApi } from './youtube.api';
 import { CategoriesService } from '../categories/categories.service';
-import path from 'path';
+import { PrismaService } from '../prisma/prisma.service';
 import { extractVideo } from '../../../data';
 
 @Injectable()
 export class YoutubeService {
   constructor(
     private readonly youtubeApi: YoutubeApi,
-    private readonly categoriesService: CategoriesService
+    private readonly categoriesService: CategoriesService,
+    private readonly prismaService: PrismaService
   ) {}
 
   private extractVideoId(url: string): string {
@@ -31,6 +32,7 @@ export class YoutubeService {
 
     throw new BadRequestException('Не удалось извлечь videoId');
   }
+
   async getCommentsByUrl({
     videoUrl,
     categoryId,
@@ -47,8 +49,7 @@ export class YoutubeService {
       this.youtubeApi.getVideoInfo(videoId),
     ]);
 
-    return {
-      message: `
+    const msg = `
       [Название видео]
       ${videoInfo.title}
 
@@ -62,24 +63,28 @@ export class YoutubeService {
             `${index}. Автор: ${comment.author}, Комментарий: ${comment.text}`
         )
         .join('\n')}
-      `,
-      tags: videoInfo.tags.join(', '),
+      `;
+    return msg;
+    return {
+      message: msg,
+      //tags: videoInfo.tags.join(', '),
     };
   }
 
   async translate({
     categoryId,
     filename,
-    originalname,
+    originalName,
+    code,
   }: {
     categoryId: string;
-    originalname: string;
+    originalName: string;
     filename: string;
+    code: string;
   }) {
     const category = await this.categoriesService.findOne(categoryId);
 
-    console.log(originalname);
-    const absPath = path.resolve(process.cwd(), 'uploads', filename);
+    const absPath = `/Users/artyomguybov/WebstormProjects/tg-automation-channel/uploads/${filename}`;
     const r1 = await extractVideo(absPath);
 
     const result = `
@@ -90,6 +95,14 @@ ${category.prompt}
 Транскрипт:
       ${r1}
       `;
+
+    await this.prismaService.transcribation.create({
+      data: {
+        fileName: originalName,
+        content: r1,
+        code: code,
+      },
+    });
     return { filename, result: result, prompt: category.prompt };
   }
 

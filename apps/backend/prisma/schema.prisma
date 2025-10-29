@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -68,4 +68,12 @@ model Subscription {
   postLimit  Int
   validUntil DateTime
   createdAt  DateTime @default(now())
+}
+
+model Transcribation {
+  id        String   @id @default(uuid())
+  fileName  String?
+  content   String?  @db.Text
+  code      String?
+  createdAt DateTime @default(now())
 }
