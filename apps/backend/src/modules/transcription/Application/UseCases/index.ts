@@ -1,0 +1,1 @@
+export { GetTranscriptionUseCase } from './GetTrascribationUseCase';

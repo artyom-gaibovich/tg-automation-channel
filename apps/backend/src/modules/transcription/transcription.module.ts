@@ -1,0 +1,30 @@
+import { Module, Provider } from '@nestjs/common';
+
+import {
+  CategoryRepository,
+  GetTranscriptionUseCase,
+  TranscriptionRepository,
+} from './Application';
+import {
+  PrismaCategoryRepository,
+  PrismaTranscriptionRepository,
+} from './Inftrastructure';
+import { TranscriptionController } from './Presenter';
+
+const application: Provider[] = [GetTranscriptionUseCase];
+const infrastructure: Provider[] = [
+  {
+    provide: CategoryRepository,
+    useClass: PrismaCategoryRepository,
+  },
+  {
+    provide: TranscriptionRepository,
+    useClass: PrismaTranscriptionRepository,
+  },
+];
+
+@Module({
+  providers: [...infrastructure, ...application],
+  controllers: [TranscriptionController],
+})
+export class TranscriptionModule {}
