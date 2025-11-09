@@ -1,17 +1,14 @@
 import {
   Body,
   Controller,
-  Delete,
-  Param,
-  Patch,
+  Get, Param,
   Post,
   UploadedFile,
   UploadedFiles,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
-import { YoutubeService } from './youtube.service';
-import { UpdateYoutubeDto } from './dto/update-youtube.dto';
-import { GetCommentsDto } from './dto/get-comments.dto';
+import { YoutubeService } from '../Infrascturcure/youtube.service';
+import { GetCommentsDto } from '../Infrascturcure/dto/get-comments.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -27,16 +24,6 @@ export class YoutubeController {
   async getComments(@Body() dto: GetCommentsDto) {
     const { videoUrl, categoryId } = dto;
     return this.youtubeService.getCommentsByUrl({ videoUrl, categoryId });
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateYoutubeDto: UpdateYoutubeDto) {
-    return this.youtubeService.update(+id, updateYoutubeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.youtubeService.remove(+id);
   }
 
   @Post('upload')
@@ -76,7 +63,6 @@ export class YoutubeController {
       originalName: file.originalname,
       filename: file.filename,
       code,
-      categoryId,
     });
   }
   @Post('upload-multiple')
@@ -89,12 +75,11 @@ export class YoutubeController {
           callback(null, uploadDir);
         },
         filename: (req, file, callback) => {
-          // Фиксируем кодировку имени файла
           const originalName = Buffer.from(
             file.originalname,
             'latin1'
           ).toString('utf8');
-          const safeName = sanitize(originalName); // убираем опасные символы
+          const safeName = sanitize(originalName);
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(safeName);
@@ -105,7 +90,6 @@ export class YoutubeController {
   )
   async uploadMultiple(
     @UploadedFiles() files: Express.Multer.File[],
-    @Body('categoryId') categoryId: string,
     @Body('code') code: string
   ) {
     const results = [];
@@ -117,7 +101,6 @@ export class YoutubeController {
         originalName: originalName,
         filename: file.filename,
         code,
-        categoryId,
       });
       results.push({
         file: file.originalname,
@@ -126,5 +109,12 @@ export class YoutubeController {
     }
 
     return { message: 'Файлы обработаны', results };
+  }
+
+  @Get(':id')
+  async getVideo(@Param('id') id: string) {
+    return this.youtubeService.getVideo() {
+
+    }
   }
 }

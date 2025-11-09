@@ -7,7 +7,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './utils/http-exception-filter';
-import { YoutubeController } from './modules/youtube/youtube.controller';
+import { YoutubeController } from './modules/youtube/Presentation/youtube.controller';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

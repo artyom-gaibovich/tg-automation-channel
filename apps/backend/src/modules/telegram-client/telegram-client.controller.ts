@@ -7,7 +7,6 @@ export class TelegramClientController {
 
   @Get()
   findAll() {
-    //TODO ПОПРАВИТЬ хардкод
     return this.telegramClientService.fetchLatestPosts(
       ['artyom_gaibovich', 'habr_media'],
       5

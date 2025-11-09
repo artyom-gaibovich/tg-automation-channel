@@ -3,11 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateYoutubeDto } from './dto/update-youtube.dto';
 import { YoutubeApi } from './youtube.api';
-import { CategoriesService } from '../categories/categories.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { extractVideo } from '../../../data';
+import { CategoriesService } from '../../categories/categories.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { extractVideo } from '../../../../data';
+import { unlink } from 'node:fs/promises';
+import path from 'path';
 
 @Injectable()
 export class YoutubeService {
@@ -72,49 +73,41 @@ export class YoutubeService {
   }
 
   async translate({
-    categoryId,
     filename,
     originalName,
     code,
   }: {
-    categoryId: string;
     originalName: string;
     filename: string;
     code: string;
   }) {
-    const category = await this.categoriesService.findOne(categoryId);
+    const absPath = path.join(process.cwd(), 'uploads', filename);
 
-    const absPath = `/Users/artyomguybov/WebstormProjects/tg-automation-channel/uploads/${filename}`;
-    const r1 = await extractVideo(absPath);
+    try {
+      const r1 = await extractVideo(absPath);
 
-    const result = `
-${category.prompt}
+      const result = `
 Название видео:
 [вставь название здесь]
 
 Транскрипт:
-      ${r1}
-      `;
+${r1}
+    `;
 
-    await this.prismaService.transcribation.create({
-      data: {
-        fileName: originalName,
-        content: r1,
-        code: code,
-      },
-    });
-    return { filename, result: result, prompt: category.prompt };
-  }
+      await this.prismaService.transcribation.create({
+        data: {
+          fileName: originalName,
+          content: r1,
+          code: code,
+        },
+      });
 
-  findOne(id: number) {
-    return `This action returns a #${id} youtube`;
-  }
+      await unlink(absPath).catch(() => {});
 
-  update(id: number, updateYoutubeDto: UpdateYoutubeDto) {
-    return `This action updates a #${id} youtube`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} youtube`;
+      return { filename, result: result };
+    } catch (error) {
+      await unlink(absPath).catch(() => {});
+      throw error;
+    }
   }
 }
