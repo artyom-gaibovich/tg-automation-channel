@@ -1,0 +1,1 @@
+export { GetTranscriptionFormatter } from './GetTranscriptionFormatter';
