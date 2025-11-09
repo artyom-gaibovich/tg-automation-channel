@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
@@ -7,9 +6,6 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ConfigService } from '@nestjs/config';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { withLogging } from '../messages/infrastructure/decorators/logger';
-
-
-
 
 @withLogging
 @Injectable()
@@ -36,7 +32,7 @@ export class AuthService {
 
     const payload = { id: user.id, email: user.email };
     return {
-      access_token: await this.jwtService.signAsync(payload,    {
+      access_token: await this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
         expiresIn: '60m',
       }),
@@ -75,21 +71,5 @@ export class AuthService {
     return {
       accessToken,
     };
-  }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }

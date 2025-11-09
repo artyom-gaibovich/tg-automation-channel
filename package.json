@@ -1,12 +1,13 @@
 {
   "name": "@tg-automation-channel/source",
   "version": "0.0.0",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "build:backend": "npx nx build backend",
     "nest:debug": "nx exec -- nest start --project backend --watch --debug",
     "debug": "nx serve backend",
-    "dev:inspect": "TS_NODE_PROJECT=apps/backend/tsconfig.app.json nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register apps/backend/src/main.ts"
+    "dev:inspect": "TS_NODE_PROJECT=apps/backend/tsconfig.app.json nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register -r tsconfig-paths/register apps/backend/src/main.ts"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "openai": "^5.10.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
+    "sanitize-filename": "^1.6.3",
     "telegram": "^2.26.22"
   },
   "devDependencies": {
