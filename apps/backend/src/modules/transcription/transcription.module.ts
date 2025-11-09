@@ -9,7 +9,7 @@ import {
   PrismaCategoryRepository,
   PrismaTranscriptionRepository,
 } from './Inftrastructure';
-import { TranscriptionController } from './Presenter';
+import { TranscriptionController } from './Presentation';
 
 const application: Provider[] = [GetTranscriptionUseCase];
 const infrastructure: Provider[] = [
