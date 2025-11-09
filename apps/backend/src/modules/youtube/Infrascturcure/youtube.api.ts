@@ -1,7 +1,6 @@
-// youtube/youtube.api.ts
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
-import { YoutubeCommentThreadListResponse } from './types/youtube.types';
+import { YoutubeCommentThreadListResponse } from '../types/youtube.types';
 
 class YoutubeVideoListResponse {
   items: any;
