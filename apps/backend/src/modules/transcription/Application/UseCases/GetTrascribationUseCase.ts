@@ -1,5 +1,5 @@
 import { CategoryRepository, TranscriptionRepository } from '../Repositories';
-import { IO } from '../../Presenter';
+import { IO } from '../../Presentation';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
