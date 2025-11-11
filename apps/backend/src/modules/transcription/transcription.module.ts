@@ -14,8 +14,12 @@ import {
   JsonGetTranscriptionFormatter,
   TranscriptionController,
 } from './Presentation';
+import { GetTranscriptionListUseCase } from './Application/UseCases/GetTranscriptionListUseCase';
 
-const application: Provider[] = [GetTranscriptionUseCase];
+const application: Provider[] = [
+  GetTranscriptionUseCase,
+  GetTranscriptionListUseCase,
+];
 const infrastructure: Provider[] = [
   {
     provide: CategoryRepository,

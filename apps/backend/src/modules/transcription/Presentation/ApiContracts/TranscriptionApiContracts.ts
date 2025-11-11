@@ -2,11 +2,16 @@ import {
   ArrayMinSize,
   IsArray,
   IsIn,
+  IsInt,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  Matches,
+  Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Transcription } from '../../Domain';
 
 export namespace TranscriptionApiContracts {
   export namespace Api {
@@ -41,6 +46,43 @@ export namespace TranscriptionApiContracts {
       export namespace Response {
         export type Data = {
           message: string;
+        };
+      }
+    }
+
+    export namespace Filter {
+      export namespace Request {
+        export class Query {
+          @IsOptional()
+          @IsInt()
+          @Min(0)
+          @Type(() => Number)
+          page?: number = 0;
+
+          @IsOptional()
+          @IsInt()
+          @Min(1)
+          @Type(() => Number)
+          size?: number = 20;
+
+          @IsOptional()
+          @IsArray()
+          @IsString({ each: true })
+          @Matches(/^[a-zA-Z0-9_]+(,(asc|desc))?$/, {
+            each: true,
+            message: 'Sort format should be: property,(asc|desc)',
+          })
+          sort?: string[];
+        }
+
+        export class Body {
+          // Пока пустое
+        }
+      }
+
+      export namespace Response {
+        export type Data = {
+          content: Omit<Transcription, 'content'>[];
         };
       }
     }
