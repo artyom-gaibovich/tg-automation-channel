@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserChannelDto } from './dto/create-user-channel.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserChannelDto } from './dto/update-user-channel.dto';
+import { PrismaService } from '../shared/persistence/prisma/prisma.service';
 
 @Injectable()
 export class UserChannelsService {
@@ -21,7 +21,7 @@ export class UserChannelsService {
   findAllByUserId({ userId }: { userId: string }) {
     return this.prismaService.userChannel.findMany({
       include: {
-        category: true
+        category: true,
       },
       where: Object.fromEntries(
         Object.entries({ userId }).filter((_, value) => value !== undefined)
@@ -58,6 +58,6 @@ export class UserChannelsService {
   remove(id: string) {
     return this.prismaService.userChannel.delete({
       where: { id },
-    })
+    });
   }
 }

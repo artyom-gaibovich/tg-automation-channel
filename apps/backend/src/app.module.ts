@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { YoutubeModule } from './modules/youtube/youtube.module';
+import { TranscriptionModule } from './modules/transcription/transcription.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @Module({
   imports: [
@@ -16,7 +18,12 @@ import { YoutubeModule } from './modules/youtube/youtube.module';
     CategoriesModule,
     MessagesModule,
     UsersModule,
+    SharedModule.register({
+      type: 'prisma',
+      global: true,
+    }),
     UserChannelsModule,
+    TranscriptionModule,
     YoutubeModule,
   ],
   controllers: [],

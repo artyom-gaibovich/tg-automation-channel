@@ -10,7 +10,7 @@ RUN npm ci
 
 COPY . .
 
-RUN npx prisma generate --schema=apps/backend/prisma/schema.prisma && npm run build:backend
+RUN npx Prisma generate --schema=apps/backend/Prisma/schema.Prisma && npm run build:backend
 
 FROM node:20-alpine
 RUN apk add --no-cache libc6-compat python3 make g++ openssl

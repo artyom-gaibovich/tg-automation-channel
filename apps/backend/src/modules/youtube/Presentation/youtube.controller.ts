@@ -1,11 +1,10 @@
 import {
   Body,
   Controller,
-  Get, Param,
   Post,
   UploadedFile,
   UploadedFiles,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { YoutubeService } from '../Infrascturcure/youtube.service';
 import { GetCommentsDto } from '../Infrascturcure/dto/get-comments.dto';
@@ -111,10 +110,10 @@ export class YoutubeController {
     return { message: 'Файлы обработаны', results };
   }
 
-  @Get(':id')
+  /*@Get(':id')
   async getVideo(@Param('id') id: string) {
     return this.youtubeService.getVideo() {
 
     }
-  }
+  }*/
 }
