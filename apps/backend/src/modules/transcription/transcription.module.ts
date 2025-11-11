@@ -9,7 +9,11 @@ import {
   PrismaCategoryRepository,
   PrismaTranscriptionRepository,
 } from './Inftrastructure';
-import { TranscriptionController } from './Presentation';
+import {
+  GetTranscriptionFormatter,
+  JsonGetTranscriptionFormatter,
+  TranscriptionController,
+} from './Presentation';
 
 const application: Provider[] = [GetTranscriptionUseCase];
 const infrastructure: Provider[] = [
@@ -20,6 +24,10 @@ const infrastructure: Provider[] = [
   {
     provide: TranscriptionRepository,
     useClass: PrismaTranscriptionRepository,
+  },
+  {
+    provide: GetTranscriptionFormatter,
+    useClass: JsonGetTranscriptionFormatter,
   },
 ];
 

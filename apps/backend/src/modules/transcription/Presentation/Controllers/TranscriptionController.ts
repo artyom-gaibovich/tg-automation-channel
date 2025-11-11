@@ -12,7 +12,8 @@ import { TranscriptionApiContracts } from '../ApiContracts';
 @Controller('transcription')
 export class TranscriptionController {
   constructor(
-    private readonly getTranscriptionUseCase: GetTranscriptionUseCase
+    private readonly getTranscriptionUseCase: GetTranscriptionUseCase,
+    private readonly getTranscriptionFormatter: GetTranscriptionFormatter
   ) {}
 
   @UsePipes(new ValidationPipe())
@@ -29,7 +30,7 @@ export class TranscriptionController {
       categoryId,
     } = dto;
     return {
-      message: GetTranscriptionFormatter.format(
+      message: this.getTranscriptionFormatter.format(
         await this.getTranscriptionUseCase.execute({
           transcriptionId,
           audience_level,
