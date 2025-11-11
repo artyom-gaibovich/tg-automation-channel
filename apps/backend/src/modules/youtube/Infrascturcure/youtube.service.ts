@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { YoutubeApi } from './youtube.api';
 import { CategoriesService } from '../../categories/categories.service';
-import { PrismaService } from '../../prisma/prisma.service';
-import { extractVideo } from '../../../../data';
 import { unlink } from 'node:fs/promises';
 import path from 'path';
+import { PrismaService } from '../../shared/persistence/prisma/prisma.service';
+import { extractVideo } from '../../../../data';
 
 @Injectable()
 export class YoutubeService {
