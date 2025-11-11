@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ConfigService } from '@nestjs/config';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { withLogging } from '../messages/infrastructure/decorators/logger';
+import { PrismaService } from '../shared/persistence/prisma/prisma.service';
 
 @withLogging
 @Injectable()
