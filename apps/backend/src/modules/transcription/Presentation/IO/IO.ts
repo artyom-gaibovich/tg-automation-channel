@@ -1,3 +1,5 @@
+import { Transcription } from '../../Domain';
+
 export declare namespace IO {
   namespace GetTranscription {
     export interface Input {
@@ -17,6 +19,12 @@ export declare namespace IO {
       language: 'ru';
       variants: number;
       prompt: string | null;
+    }
+  }
+
+  namespace GetTranscriptionList {
+    export interface Output {
+      content: Omit<Transcription, 'content'>[];
     }
   }
 }

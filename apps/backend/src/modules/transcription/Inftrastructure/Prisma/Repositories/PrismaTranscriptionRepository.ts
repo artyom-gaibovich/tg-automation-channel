@@ -17,4 +17,12 @@ export class PrismaTranscriptionRepository extends TranscriptionRepository {
     }
     return transcription;
   }
+
+  findAll(): Promise<Omit<Transcription, 'content'>[]> {
+    return this.prisma.transcribation.findMany({
+      omit: {
+        content: true,
+      },
+    });
+  }
 }

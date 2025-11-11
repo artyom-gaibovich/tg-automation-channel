@@ -8,11 +8,13 @@ import {
 import { GetTranscriptionUseCase } from '../../Application';
 import { GetTranscriptionFormatter } from '../Formatter';
 import { TranscriptionApiContracts } from '../ApiContracts';
+import { GetTranscriptionListUseCase } from '../../Application/UseCases/GetTranscriptionListUseCase';
 
 @Controller('transcription')
 export class TranscriptionController {
   constructor(
     private readonly getTranscriptionUseCase: GetTranscriptionUseCase,
+    private readonly getTranscriptionListUseCase: GetTranscriptionListUseCase,
     private readonly getTranscriptionFormatter: GetTranscriptionFormatter
   ) {}
 
@@ -41,5 +43,12 @@ export class TranscriptionController {
         })
       ),
     };
+  }
+
+  @Post('list')
+  async getTranscriptions(
+    @Body() dto: TranscriptionApiContracts.Api.Filter.Request.Body
+  ): Promise<TranscriptionApiContracts.Api.Filter.Response.Data> {
+    return this.getTranscriptionListUseCase.execute();
   }
 }
