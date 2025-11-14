@@ -86,5 +86,18 @@ export namespace TranscriptionApiContracts {
         };
       }
     }
+
+    export namespace GetOneTranscription {
+      export namespace Request {
+        export class Params {
+          @IsString()
+          @IsNotEmpty()
+          id: string;
+        }
+      }
+      export namespace Response {
+        export type Data = Transcription;
+      }
+    }
   }
 }
