@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { YoutubeService } from './Infrascturcure/youtube.service';
-import { YoutubeController } from './Presentation/youtube.controller';
+import { YoutubeController } from './Presentation/Controllers/youtube.controller';
 import { YoutubeApi } from './Infrascturcure/youtube.api';
 import { CategoriesModule } from '../categories/categories.module';
 import { PrismaModule } from '../shared/persistence/prisma/prisma.module';
