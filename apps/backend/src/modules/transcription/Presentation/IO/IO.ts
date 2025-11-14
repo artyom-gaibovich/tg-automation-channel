@@ -1,3 +1,4 @@
+import { JsonValue } from '@prisma/client/runtime/library';
 import { Transcription } from '../../Domain';
 
 export declare namespace IO {
@@ -14,7 +15,7 @@ export declare namespace IO {
     export interface Output {
       title: string | null;
       topic_tags: string[];
-      transcription: string | null;
+      transcription: JsonValue;
       audience_level: 'beginner' | 'middle';
       language: 'ru';
       variants: number;
@@ -34,5 +35,26 @@ export declare namespace IO {
     }
 
     export type Output = Transcription;
+  }
+
+  namespace UpdateTranscription {
+    export interface Input {
+      id: string;
+      data: {
+        fileName?: string;
+        content?: JsonValue;
+        code?: string;
+      };
+    }
+
+    export type Output = Transcription;
+  }
+
+  namespace DeleteTranscription {
+    export interface Input {
+      id: string;
+    }
+
+    export type Output = void;
   }
 }

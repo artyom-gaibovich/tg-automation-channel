@@ -25,4 +25,28 @@ export class PrismaTranscriptionRepository extends TranscriptionRepository {
       },
     });
   }
+
+  async updatePartial(
+    id: string,
+    data: Partial<Omit<Transcription, 'id' | 'content'>>
+  ): Promise<Transcription> {
+    try {
+      return await this.prisma.transcribation.update({
+        where: { id },
+        data,
+      });
+    } catch {
+      throw new NotFoundException(`Transcription with id ${id} not found`);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await this.prisma.transcribation.delete({
+        where: { id },
+      });
+    } catch {
+      throw new NotFoundException(`Transcription with id ${id} not found`);
+    }
+  }
 }

@@ -73,8 +73,9 @@ model Subscription {
 model Transcribation {
   id        String   @id @default(uuid())
   fileName  String?
-  content   String?  @db.Text
+  content   Json? @db.JsonB
   code      String?
   createdAt DateTime @default(now())
-  order Int? @default(0)
+  order     Int?     @default(0)
+  tags      String[]
 }

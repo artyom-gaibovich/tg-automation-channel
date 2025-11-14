@@ -1,1 +1,1 @@
-export { TranscriptionApiContracts } from './TranscriptionApiContracts';
+export { TranscriptionApiContracts } from './types';
