@@ -27,4 +27,12 @@ export declare namespace IO {
       content: Omit<Transcription, 'content'>[];
     }
   }
+
+  namespace GetOneTranscription {
+    export interface Input {
+      transcriptionId: string;
+    }
+
+    export type Output = Transcription;
+  }
 }

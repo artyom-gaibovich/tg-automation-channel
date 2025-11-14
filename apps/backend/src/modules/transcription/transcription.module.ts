@@ -15,10 +15,12 @@ import {
   TranscriptionController,
 } from './Presentation';
 import { GetTranscriptionListUseCase } from './Application/UseCases/GetTranscriptionListUseCase';
+import { GetOneTranscriptionUseCase } from './Application/UseCases/GetOneTranscriptionUseCase';
 
 const application: Provider[] = [
   GetTranscriptionUseCase,
   GetTranscriptionListUseCase,
+  GetOneTranscriptionUseCase,
 ];
 const infrastructure: Provider[] = [
   {
