@@ -5,15 +5,18 @@ import {
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { YoutubeService } from '../Infrascturcure/youtube.service';
-import { GetCommentsDto } from '../Infrascturcure/dto/get-comments.dto';
+import { YoutubeService } from '../../Infrascturcure/youtube.service';
+import { GetCommentsDto } from '../../Infrascturcure/dto/get-comments.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { mkdir, rm } from 'fs/promises';
 import { existsSync } from 'fs';
 import sanitize from 'sanitize-filename';
+import { YouTubeApiContracts } from './ApiContracts';
 
 @Controller('youtube')
 export class YoutubeController {
@@ -62,8 +65,11 @@ export class YoutubeController {
       originalName: file.originalname,
       filename: file.filename,
       code,
+      seoTags: [],
     });
   }
+
+  @UsePipes(new ValidationPipe())
   @Post('upload-multiple')
   @UseInterceptors(
     FilesInterceptor('files', 200, {
@@ -89,7 +95,7 @@ export class YoutubeController {
   )
   async uploadMultiple(
     @UploadedFiles() files: Express.Multer.File[],
-    @Body('code') code: string
+    @Body() body: YouTubeApiContracts.Api.UploadMultiple.Request.Body
   ) {
     const results = [];
     for (const file of files) {
@@ -99,7 +105,8 @@ export class YoutubeController {
       const res = await this.youtubeService.translate({
         originalName: originalName,
         filename: file.filename,
-        code,
+        code: body.code,
+        seoTags: body.seo_tags,
       });
       results.push({
         file: file.originalname,

@@ -1,17 +1,23 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { GetTranscriptionUseCase } from '../../Application';
+import {
+  DeleteTranscriptionUseCase,
+  GetOneTranscriptionUseCase,
+  GetTranscriptionListUseCase,
+  GetTranscriptionUseCase,
+  UpdateTranscriptionUseCase,
+} from '../../Application';
 import { GetTranscriptionFormatter } from '../Formatter';
 import { TranscriptionApiContracts } from '../ApiContracts';
-import { GetTranscriptionListUseCase } from '../../Application/UseCases/GetTranscriptionListUseCase';
-import { GetOneTranscriptionUseCase } from '../../Application/UseCases/GetOneTranscriptionUseCase';
 
 @Controller('transcription')
 export class TranscriptionController {
@@ -19,7 +25,9 @@ export class TranscriptionController {
     private readonly getTranscriptionUseCase: GetTranscriptionUseCase,
     private readonly getTranscriptionListUseCase: GetTranscriptionListUseCase,
     private readonly getTranscriptionFormatter: GetTranscriptionFormatter,
-    private readonly getOneTranscriptionUseCase: GetOneTranscriptionUseCase
+    private readonly getOneTranscriptionUseCase: GetOneTranscriptionUseCase,
+    private readonly updateTranscriptionUseCase: UpdateTranscriptionUseCase,
+    private readonly deleteTranscriptionUseCase: DeleteTranscriptionUseCase
   ) {}
 
   @UsePipes(new ValidationPipe())
@@ -59,5 +67,28 @@ export class TranscriptionController {
     @Param('id') transcriptionId: string
   ): Promise<TranscriptionApiContracts.Api.GetOneTranscription.Response.Data> {
     return this.getOneTranscriptionUseCase.execute({ transcriptionId });
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updatePartial(
+    @Param()
+    params: TranscriptionApiContracts.Api.PatchTranscription.Request.Params,
+    @Body() dto: TranscriptionApiContracts.Api.PatchTranscription.Request.Body
+  ): Promise<TranscriptionApiContracts.Api.PatchTranscription.Response.Data> {
+    return this.updateTranscriptionUseCase.execute({
+      id: params.id,
+      data: dto,
+    });
+  }
+
+  @Delete(':id')
+  @UsePipes(new ValidationPipe())
+  async delete(
+    @Param()
+    params: TranscriptionApiContracts.Api.DeleteTranscription.Request.Params
+  ): Promise<TranscriptionApiContracts.Api.DeleteTranscription.Response.Data> {
+    await this.deleteTranscriptionUseCase.execute({ id: params.id });
+    return { success: true };
   }
 }

@@ -99,5 +99,45 @@ export namespace TranscriptionApiContracts {
         export type Data = Transcription;
       }
     }
+
+    export namespace PatchTranscription {
+      export namespace Request {
+        export class Params {
+          @IsString()
+          @IsNotEmpty()
+          id: string;
+        }
+
+        export class Body {
+          @IsOptional()
+          @IsString()
+          fileName?: string;
+
+          @IsOptional()
+          @IsString()
+          code?: string;
+        }
+      }
+
+      export namespace Response {
+        export type Data = Transcription;
+      }
+    }
+
+    export namespace DeleteTranscription {
+      export namespace Request {
+        export class Params {
+          @IsString()
+          @IsNotEmpty()
+          id: string;
+        }
+      }
+
+      export namespace Response {
+        export type Data = {
+          success: true;
+        };
+      }
+    }
   }
 }

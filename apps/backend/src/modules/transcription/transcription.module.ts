@@ -2,8 +2,12 @@ import { Module, Provider } from '@nestjs/common';
 
 import {
   CategoryRepository,
+  DeleteTranscriptionUseCase,
+  GetOneTranscriptionUseCase,
+  GetTranscriptionListUseCase,
   GetTranscriptionUseCase,
   TranscriptionRepository,
+  UpdateTranscriptionUseCase,
 } from './Application';
 import {
   PrismaCategoryRepository,
@@ -14,13 +18,13 @@ import {
   JsonGetTranscriptionFormatter,
   TranscriptionController,
 } from './Presentation';
-import { GetTranscriptionListUseCase } from './Application/UseCases/GetTranscriptionListUseCase';
-import { GetOneTranscriptionUseCase } from './Application/UseCases/GetOneTranscriptionUseCase';
 
 const application: Provider[] = [
   GetTranscriptionUseCase,
   GetTranscriptionListUseCase,
   GetOneTranscriptionUseCase,
+  UpdateTranscriptionUseCase,
+  DeleteTranscriptionUseCase,
 ];
 const infrastructure: Provider[] = [
   {
