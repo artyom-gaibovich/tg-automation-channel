@@ -2,33 +2,34 @@ import path from 'path';
 import { nodewhisper } from 'nodejs-whisper';
 
 export async function extractVideo(filePath: string): Promise<string> {
-  const p = path.isAbsolute(filePath)
+  // Убеждаемся, что путь абсолютный
+  const absolutePath = path.isAbsolute(filePath)
     ? filePath
     : path.resolve(process.cwd(), filePath);
 
-  return nodewhisper(p, {
-    modelName: 'large-v3-turbo', //Downloaded models name
-    autoDownloadModelName: 'large-v3-turbo', // (optional) auto download a model if model is not present
-    removeWavFileAfterTranscription: true, // (optional) remove wav file once transcribed
-    withCuda: false, // (optional) use cuda for faster processing
-    logger: console, // (optional) Logging instance, defaults to console
+  console.log('Whisper processing file:', absolutePath);
+
+  return nodewhisper(absolutePath, {
+    modelName: 'large-v3-turbo',
+    autoDownloadModelName: 'large-v3-turbo',
+    removeWavFileAfterTranscription: true,
+    withCuda: false,
+    logger: console,
     whisperOptions: {
-      outputInCsv: false, // get output result in csv file
-      outputInJson: false, // get output result in json file
-      outputInJsonFull: false, // get output result in json file including more information
-      outputInLrc: false, // get output result in lrc file
-      outputInSrt: false, // get output result in srt file
-      outputInText: false, // get output result in txt file
-      outputInVtt: false, // get output result in vtt file
-      outputInWords: false, // get output result in wts file for karaoke
-      translateToEnglish: false, // translate from source language to english
-      wordTimestamps: false, // word-level timestamps
-      //timestamps_length: 200, // amount of dialogue per timestamp pair
-      splitOnWord: true, // split on word rather than on token
+      outputInCsv: false,
+      outputInJson: false,
+      outputInJsonFull: false,
+      outputInLrc: false,
+      outputInSrt: false,
+      outputInText: false,
+      outputInVtt: false,
+      outputInWords: false,
+      translateToEnglish: false,
+      wordTimestamps: false,
+      splitOnWord: true,
     },
   });
 }
-
 /*const MODELS_LIST = [
   'tiny',
   'tiny.en',

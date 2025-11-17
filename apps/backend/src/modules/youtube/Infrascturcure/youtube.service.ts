@@ -10,6 +10,11 @@ import path from 'path';
 import { PrismaService } from '../../shared/persistence/prisma/prisma.service';
 import { extractVideo } from '../../../../data';
 
+const PATHS = {
+  UPLOAD_DIR: path.join(process.cwd(), 'uploads'),
+  ROOT_DIR: process.cwd(),
+} as const;
+
 @Injectable()
 export class YoutubeService {
   constructor(
@@ -135,7 +140,10 @@ export class YoutubeService {
     code: string;
     seoTags: string[];
   }) {
-    const absPath = path.join(process.cwd(), 'uploads', filename);
+    // Формируем абсолютный путь к файлу
+    const absPath = path.join(PATHS.UPLOAD_DIR, filename);
+
+    console.log('Processing file at:', absPath);
 
     try {
       const res = await extractVideo(absPath);
@@ -149,7 +157,7 @@ export class YoutubeService {
 
 Транскрипт:
 ${r1}
-    `;
+      `;
 
       await this.prismaService.transcribation.create({
         data: {
@@ -160,11 +168,17 @@ ${r1}
         },
       });
 
-      await unlink(absPath).catch(() => {});
+      // Удаляем файл после обработки
+      await unlink(absPath).catch((err) => {
+        console.error('Failed to delete file:', err);
+      });
 
       return { filename, result: result };
     } catch (error) {
-      await unlink(absPath).catch(() => {});
+      // Пытаемся удалить файл даже в случае ошибки
+      await unlink(absPath).catch((err) => {
+        console.error('Failed to delete file after error:', err);
+      });
       throw error;
     }
   }

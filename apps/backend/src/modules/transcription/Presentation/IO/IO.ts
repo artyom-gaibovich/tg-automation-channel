@@ -43,6 +43,7 @@ export declare namespace IO {
       data: {
         fileName?: string;
         content?: JsonValue;
+        section?: string;
         code?: string;
       };
     }

@@ -20,6 +20,9 @@ export class PrismaTranscriptionRepository extends TranscriptionRepository {
 
   findAll(): Promise<Omit<Transcription, 'content'>[]> {
     return this.prisma.transcribation.findMany({
+      orderBy: {
+        order: 'asc',
+      },
       omit: {
         content: true,
       },
@@ -31,7 +34,7 @@ export class PrismaTranscriptionRepository extends TranscriptionRepository {
     data: Partial<Omit<Transcription, 'id' | 'content'>>
   ): Promise<Transcription> {
     try {
-      return await this.prisma.transcribation.update({
+      return this.prisma.transcribation.update({
         where: { id },
         data,
       });

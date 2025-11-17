@@ -71,10 +71,11 @@ model Subscription {
 }
 
 model Transcribation {
-  id        String   @id @default(uuid())
+  id String @id @default(uuid())
   fileName  String?
-  content   Json? @db.JsonB
+  content   Json?    @db.JsonB
   code      String?
+  section   String?
   createdAt DateTime @default(now())
   order     Int?     @default(0)
   tags      String[]

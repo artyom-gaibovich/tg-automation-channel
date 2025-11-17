@@ -4,7 +4,7 @@ import { TelegramClientController } from './telegram-client.controller';
 import { StringSession } from 'telegram/sessions';
 import { TelegramClient } from 'telegram';
 import { ConfigService } from '@nestjs/config';
-import { EnvConfigDev } from '@shared/index';
+import { EnvConfigDev } from '../../shared';
 
 @Module({
   controllers: [TelegramClientController],
