@@ -36,5 +36,34 @@ export namespace YouTubeApiContracts {
         };
       }
     }
+    export namespace UploadSingle {
+      export namespace Request {
+        export class Body {
+          @IsString()
+          @IsNotEmpty()
+          code: string;
+
+          @IsArray()
+          @IsString({ each: true })
+          @Type(() => String)
+          seo_tags: string[];
+        }
+
+        export type File = Express.Multer.File;
+      }
+
+      export namespace Response {
+        export type TranslatedItem = {
+          file: string;
+          result: TranslateResult[];
+        };
+
+        export type Data = {
+          message: string;
+          file: string;
+          result: TranslateResult[];
+        };
+      }
+    }
   }
 }

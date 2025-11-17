@@ -5,7 +5,8 @@ export class Transcription {
     public readonly id: string,
     public readonly fileName: string | null,
     public readonly content: JsonValue,
-    public readonly code: string | null
+    public readonly code: string | null,
+    public readonly section: string | null
   ) {}
 
   static create(params: {
@@ -13,12 +14,14 @@ export class Transcription {
     fileName: string;
     content: JsonValue;
     code: string;
+    section: string;
   }): Transcription {
     return new Transcription(
       params.id,
       params.fileName,
       params.content,
-      params.code
+      params.code,
+      params.section
     );
   }
 }
