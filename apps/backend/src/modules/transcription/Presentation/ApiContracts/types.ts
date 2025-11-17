@@ -116,6 +116,14 @@ export namespace TranscriptionApiContracts {
           @IsOptional()
           @IsString()
           code?: string;
+
+          @IsOptional()
+          @IsString()
+          section?: string;
+
+          @IsOptional()
+          @IsNumber()
+          order?: number;
         }
       }
 

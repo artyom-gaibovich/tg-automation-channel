@@ -1,9 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "paths": {
-      "@shared/*": ["src/shared/*"]
-    },
     "outDir": "dist",
     "types": [
       "node"
