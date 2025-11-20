@@ -8,7 +8,7 @@ import {
   UpdateScenarioUseCase,
 } from './Application';
 
-import { ScenarioController } from './Presentation/Controllers/ScenarioController';
+import { ScenarioController } from './Presentation';
 import { PrismaScenarioRepository } from './Infrastructure';
 
 const application: Provider[] = [
