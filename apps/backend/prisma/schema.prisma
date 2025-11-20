@@ -80,3 +80,13 @@ model Transcribation {
   order     Int?     @default(0)
   tags      String[]
 }
+
+model Scenario {
+  id String @id @default(uuid())
+  content   String? @db.Text
+  code      String?
+  section   String?
+  createdAt DateTime @default(now())
+  order     Int?     @default(0)
+  tags      String[]
+}

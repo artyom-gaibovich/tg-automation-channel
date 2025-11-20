@@ -8,6 +8,7 @@ import { MessagesModule } from './modules/messages/messages.module';
 import { YoutubeModule } from './modules/youtube/youtube.module';
 import { TranscriptionModule } from './modules/transcription/transcription.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { ScenarioModule } from './modules/scenario/scenario.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SharedModule } from './modules/shared/shared.module';
     AuthModule,
     CategoriesModule,
     MessagesModule,
+    ScenarioModule,
     UsersModule,
     SharedModule.register({
       type: 'prisma',
