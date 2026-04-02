@@ -1,1 +1,0 @@
-export { PrismaScenarioRepository } from './PrismaScenarioRepository';

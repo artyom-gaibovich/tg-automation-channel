@@ -1,0 +1,1 @@
+export { ScenarioPrismaRepository } from './repositories';

@@ -7,7 +7,7 @@ services:
       - backend_network
     build:
       context: .
-      dockerfile: apps/backend/Dockerfile
+      dockerfile: Dockerfile
     container_name: tg-automation-backend
     restart: always
     ports:
