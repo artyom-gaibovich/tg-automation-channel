@@ -1,1 +1,0 @@
-export { TranscriptionController } from './TranscriptionController';
