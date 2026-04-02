@@ -8,7 +8,7 @@ export class TelegramClientService {
   constructor(private readonly client: TelegramClient) {}
 
   async fetchLatestPosts(channelUsernames: string[], limit = 5) {
-    const posts = [];
+    const posts: Array<{ channel: string; messageId: number; text: string; date: number }> = [];
 
     for (const username of ['artyom_gaibovich']) {
       try {

@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TelegramClientService } from './telegram-client.service';
-import { TelegramClientController } from './telegram-client.controller';
 import { StringSession } from 'telegram/sessions';
 import { TelegramClient } from 'telegram';
 import { ConfigService } from '@nestjs/config';
-import { EnvConfigDev } from '../../shared';
+import { EnvConfigDev } from '../shared/envConst';
 
 @Module({
-  controllers: [TelegramClientController],
+  controllers: [],
   providers: [
     TelegramClientService,
     {

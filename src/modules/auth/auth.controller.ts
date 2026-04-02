@@ -31,7 +31,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req: Express.Request & { user: any }) {
+  getProfile(@Request() req: Express.Request & { user: { id: string; email: string } }) {
     return req.user;
   }
 }

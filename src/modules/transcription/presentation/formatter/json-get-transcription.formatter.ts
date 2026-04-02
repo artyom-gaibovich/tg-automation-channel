@@ -5,12 +5,11 @@ export class JsonGetTranscriptionFormatter extends GetTranscriptionFormatter {
   public format(output: UseCasePort.GetTranscription.Output, toStr = true): string {
     const { prompt, ...props } = output;
 
-    // @ts-ignore
-    console.log(props.transcription.transcription);
-
+    const transcriptionData = props.transcription as {
+      transcription: Array<{ text: string }>;
+    };
     props.transcription = toStr
-      ? // @ts-expect-error     // @ts-ignore
-        props.transcription?.transcription.map((item: any) => item.text).join(' ')
+      ? transcriptionData.transcription.map((item) => item.text).join(' ')
       : props.transcription;
 
     return `

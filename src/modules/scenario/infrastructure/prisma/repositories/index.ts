@@ -1,1 +1,1 @@
-export { ScenarioPrismaRepository } from './scenario.prisma-repository.ts';
+export { ScenarioPrismaRepository } from './scenario.prisma-repository';

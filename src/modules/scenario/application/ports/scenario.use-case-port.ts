@@ -1,5 +1,5 @@
-import { ScenarioEntity } from '../../domain';
-import { Status } from '../../domain/entities/scenario.entity';
+import type { ScenarioEntity } from '../../domain';
+import type { Status } from '../../domain/entities/scenario.entity';
 
 export declare namespace UseCasePort {
   namespace CreateScenario {

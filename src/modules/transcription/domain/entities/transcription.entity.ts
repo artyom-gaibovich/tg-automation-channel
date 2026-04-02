@@ -1,4 +1,4 @@
-import { JsonValue } from '../../../shared/types';
+import type { JsonValue } from '../../../shared/types';
 
 export class TranscriptionEntity {
   constructor(

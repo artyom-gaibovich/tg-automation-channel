@@ -1,3 +1,3 @@
-import { JsonValue as PrismaJsonValue } from '@prisma/client/runtime/library';
+import type { JsonValue as PrismaJsonValue } from '@prisma/client/runtime/library';
 
 export type JsonValue = PrismaJsonValue;

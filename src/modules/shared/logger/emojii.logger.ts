@@ -1,4 +1,4 @@
-import { LoggerService } from '@nestjs/common';
+import type { LoggerService } from '@nestjs/common';
 
 export class EmojiLogger implements LoggerService {
   log(message: string) {
@@ -19,6 +19,6 @@ export class EmojiLogger implements LoggerService {
   }
 
   private writeToFile(message: string) {
-    console.log(message);
+    process.stdout.write(message + '\n');
   }
 }

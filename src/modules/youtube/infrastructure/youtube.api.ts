@@ -2,8 +2,15 @@ import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import { YoutubeCommentThreadListResponse } from '../presentation/controllers/api-contracts/types';
 
+interface YoutubeVideoItem {
+  snippet: {
+    title: string;
+    tags: string[];
+  };
+}
+
 class YoutubeVideoListResponse {
-  items: any;
+  items: YoutubeVideoItem[];
 }
 
 @Injectable()

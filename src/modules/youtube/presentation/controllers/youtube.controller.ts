@@ -14,8 +14,9 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path, { extname } from 'path';
 import { mkdir, rm } from 'fs/promises';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import sanitize from 'sanitize-filename';
+import { YouTubeApiContracts } from './api-contracts';
 
 export const PATHS = {
   UPLOAD_DIR: path.join(process.cwd(), 'uploads'),
@@ -46,20 +47,16 @@ export class YoutubeController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: async (req, file, callback) => {
+        destination: (req, file, callback) => {
           const uploadDir = './uploads';
-
-          try {
-            if (existsSync(uploadDir)) {
-              await rm(uploadDir, { recursive: true, force: true });
-            }
-
-            await mkdir(uploadDir, { recursive: true });
-
-            callback(null, uploadDir);
-          } catch (error) {
-            if (error instanceof Error) callback(error, uploadDir);
-          }
+          const doSetup = existsSync(uploadDir)
+            ? rm(uploadDir, { recursive: true, force: true }).then(() =>
+                mkdir(uploadDir, { recursive: true }),
+              )
+            : mkdir(uploadDir, { recursive: true });
+          doSetup
+            .then(() => callback(null, uploadDir))
+            .catch((error: Error) => callback(error, uploadDir));
         },
         filename: (req, file, callback) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -69,11 +66,7 @@ export class YoutubeController {
       }),
     }),
   )
-  async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('categoryId') categoryId: string,
-    @Body('code') code: string,
-  ) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body('code') code: string) {
     return await this.youtubeService.translate({
       originalName: file.originalname,
       filename: file.filename,
@@ -87,9 +80,8 @@ export class YoutubeController {
   @UseInterceptors(
     FilesInterceptor('files', 200, {
       storage: diskStorage({
-        destination: async (req, file, callback) => {
-          // Используем абсолютный путь из констант
-          await mkdir(PATHS.UPLOAD_DIR, { recursive: true });
+        destination: (req, file, callback) => {
+          mkdirSync(PATHS.UPLOAD_DIR, { recursive: true });
           callback(null, PATHS.UPLOAD_DIR);
         },
         filename: (req, file, callback) => {
@@ -104,9 +96,9 @@ export class YoutubeController {
   )
   async uploadMultiple(
     @UploadedFiles() files: Express.Multer.File[],
-    @Body() body: any, // Замените на ваш тип YouTubeApiContracts.Api.UploadMultiple.Request.Body
+    @Body() body: YouTubeApiContracts.Api.UploadMultiple.Request.Body,
   ) {
-    const results = [];
+    const results: Array<{ file: string; result: { filename: string; result: string } }> = [];
 
     for (const file of files) {
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');

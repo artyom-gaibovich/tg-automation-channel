@@ -1,4 +1,4 @@
-import { TranscriptionEntity } from '../../domain';
+import type { TranscriptionEntity } from '../../domain';
 
 export abstract class TranscriptionRepository {
   abstract findById(id: string): Promise<TranscriptionEntity>;

@@ -1,4 +1,4 @@
-import { ScenarioEntity } from '../../domain';
+import type { ScenarioEntity } from '../../domain';
 
 export abstract class ScenarioRepository {
   abstract findById(id: string): Promise<ScenarioEntity>;

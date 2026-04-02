@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { YoutubeApi } from './youtube.api';
 import { CategoryService } from '../../category/category.service';
 import { unlink } from 'node:fs/promises';
 import path from 'path';
 import { PrismaService } from '../../shared/persistence/prisma/prisma.service';
-import { extractVideo } from '../../../../data';
+import { extractVideo } from '../../transcription/infrastructure/whisper/whisper';
 import axios from 'axios';
 
 const PATHS = {
@@ -12,8 +12,33 @@ const PATHS = {
   ROOT_DIR: process.cwd(),
 } as const;
 
+interface YoutubeSubscriptionItem {
+  snippet: {
+    resourceId: { channelId: string };
+    title: string;
+    description: string;
+    thumbnails: unknown;
+  };
+}
+
+interface YoutubeSubscriptionsResponse {
+  items: YoutubeSubscriptionItem[];
+  nextPageToken?: string;
+  pageInfo: { totalResults: number };
+}
+
+interface YoutubeChannelsResponse {
+  items: Array<{ id: string }>;
+}
+
+interface YoutubeSearchResponse {
+  items: Array<{ snippet: { channelId: string } }>;
+}
+
 @Injectable()
 export class YoutubeService {
+  private readonly logger = new Logger(YoutubeService.name);
+
   constructor(
     private readonly youtubeApi: YoutubeApi,
     private readonly categoriesService: CategoryService,
@@ -26,7 +51,7 @@ export class YoutubeService {
   async getChannelSubscriptions(channelId: string, maxResults = 50, pageToken?: string) {
     const url = `${this.baseUrl}/subscriptions`;
 
-    const params: any = {
+    const params: Record<string, string | number | undefined> = {
       part: 'snippet',
       channelId: channelId,
       maxResults: Math.min(maxResults, 500), // Максимум 50 за запрос
@@ -38,9 +63,9 @@ export class YoutubeService {
       params.pageToken = pageToken;
     }
 
-    const res = await axios.get<any>(url, { params });
+    const res = await axios.get<YoutubeSubscriptionsResponse>(url, { params });
 
-    const subscriptions = res.data.items.map((item: any) => ({
+    const subscriptions = res.data.items.map((item) => ({
       channelId: item.snippet.resourceId.channelId,
       title: item.snippet.title,
       description: item.snippet.description,
@@ -58,7 +83,7 @@ export class YoutubeService {
     const url = `${this.baseUrl}/channels`;
 
     try {
-      const res = await axios.get<any>(url, {
+      const res = await axios.get<YoutubeChannelsResponse>(url, {
         params: {
           part: 'id,snippet',
           forHandle: `@${username.replace('@', '')}`,
@@ -71,7 +96,7 @@ export class YoutubeService {
       }
 
       const searchUrl = `${this.baseUrl}/search`;
-      const searchRes = await axios.get(searchUrl, {
+      const searchRes = await axios.get<YoutubeSearchResponse>(searchUrl, {
         params: {
           part: 'snippet',
           q: username,
@@ -86,8 +111,9 @@ export class YoutubeService {
       }
 
       throw new Error('Канал не найден');
-    } catch (error: any) {
-      throw new Error(`Ошибка поиска канала: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Ошибка поиска канала: ${message}`);
     }
   }
 
@@ -203,7 +229,7 @@ export class YoutubeService {
     // Формируем абсолютный путь к файлу
     const absPath = path.join(PATHS.UPLOAD_DIR, filename);
 
-    console.log('Processing file at:', absPath);
+    this.logger.log(`Processing file at: ${absPath}`);
 
     try {
       const res = await extractVideo(absPath);
