@@ -10,7 +10,7 @@ export class TelegramClientService {
   async fetchLatestPosts(channelUsernames: string[], limit = 5) {
     const posts: Array<{ channel: string; messageId: number; text: string; date: number }> = [];
 
-    for (const username of ['artyom_gaibovich']) {
+    for (const username of channelUsernames) {
       try {
         const entity = await this.client.getEntity(username);
         const messages = await this.client.getMessages(entity, { limit });
