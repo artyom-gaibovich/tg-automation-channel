@@ -71,14 +71,15 @@ model Subscription {
 }
 
 model Transcribation {
-  id        String   @id @default(uuid())
-  fileName  String?
-  content   Json?    @db.JsonB
-  code      String?
-  section   String?
-  createdAt DateTime @default(now())
-  order     Int?     @default(0)
-  tags      String[]
+  id                String   @id @default(uuid())
+  fileName          String?
+  content           Json?    @db.JsonB
+  transcriptionText String?  @db.Text
+  code              String?
+  section           String?
+  createdAt         DateTime @default(now())
+  order             Int?     @default(0)
+  tags              String[]
 }
 
 model Scenario {

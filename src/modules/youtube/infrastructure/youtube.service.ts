@@ -4,7 +4,7 @@ import { CategoryService } from '../../category/category.service';
 import { unlink } from 'node:fs/promises';
 import path from 'path';
 import { PrismaService } from '../../shared/persistence/prisma/prisma.service';
-import { extractVideo } from '../../transcription/infrastructure/whisper/data';
+import { extractVideo } from '../../transcription/infrastructure/whisper/whisper';
 import axios from 'axios';
 
 const PATHS = {
