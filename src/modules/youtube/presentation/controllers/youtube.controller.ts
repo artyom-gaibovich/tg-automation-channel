@@ -8,8 +8,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { YoutubeService } from '../../infrastructure/youtube.service';
-import { GetCommentsDto } from '../../infrastructure/dto/get-comments.dto';
+import { FilesService } from '../../infrastructure/files.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path, { extname } from 'path';
@@ -23,25 +22,9 @@ export const PATHS = {
   ROOT_DIR: process.cwd(),
 } as const;
 
-@Controller('youtube')
-export class YoutubeController {
-  constructor(private readonly youtubeService: YoutubeService) {}
-
-  @Post('username')
-  async getChannel(@Body() dto: { username: string }) {
-    return this.youtubeService.getChannelIdByUsername(dto.username);
-  }
-
-  @Post('username/subs')
-  async getChannelSubs(@Body() dto: { id: string }) {
-    return this.youtubeService.getChannelSubscriptions(dto.id);
-  }
-
-  @Post()
-  async getComments(@Body() dto: GetCommentsDto) {
-    const { videoUrl, categoryId } = dto;
-    return this.youtubeService.getCommentsByUrl({ videoUrl, categoryId });
-  }
+@Controller('files')
+export class FilesController {
+  constructor(private readonly filesService: FilesService) {}
 
   @Post('upload')
   @UseInterceptors(
@@ -67,7 +50,7 @@ export class YoutubeController {
     }),
   )
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body('code') code: string) {
-    return await this.youtubeService.translate({
+    return await this.filesService.translate({
       originalName: file.originalname,
       filename: file.filename,
       code,
@@ -103,7 +86,7 @@ export class YoutubeController {
     for (const file of files) {
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
 
-      const res = await this.youtubeService.translate({
+      const res = await this.filesService.translate({
         originalName: originalName,
         filename: file.filename,
         code: body.code,

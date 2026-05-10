@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { ConfigService } from '@nestjs/config';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { withLogging } from '../message/infrastructure/decorators/logger';
 import { PrismaService } from '../shared/persistence/prisma/prisma.service';
+import { AppConfigService } from '../shared/config';
 
 @withLogging
 @Injectable()
@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private prismaService: PrismaService,
-    private configService: ConfigService,
+    private appConfigService: AppConfigService,
   ) {}
 
   async login(loginDto: LoginAuthDto): Promise<{ access_token: string }> {
@@ -32,7 +32,7 @@ export class AuthService {
     const payload = { id: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        secret: this.appConfigService.jwtAccessSecret,
         expiresIn: '60m',
       }),
     };
@@ -61,7 +61,7 @@ export class AuthService {
           email: newUser.email,
         },
         {
-          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+          secret: this.appConfigService.jwtAccessSecret,
           expiresIn: '60m',
         },
       ),
