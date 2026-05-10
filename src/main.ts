@@ -6,6 +6,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AppConfigService } from './modules/shared/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,12 +24,10 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
   });
-  const port = process.env.PORT || 3002;
+  const port = app.get(AppConfigService).port;
 
-  console.log(process.env.PATH);
-
-  await app.listen(port);
+  await app.listen(3002);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
 }
 
-bootstrap()
+void bootstrap();

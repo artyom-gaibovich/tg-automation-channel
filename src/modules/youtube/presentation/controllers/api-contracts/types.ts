@@ -68,11 +68,11 @@ export namespace YouTubeApiContracts {
   }
 }
 
-export interface YoutubeCommentThreadListResponse {
-  items: YoutubeCommentThread[];
+export interface FilesCommentThreadListResponse {
+  items: FilesCommentThread[];
 }
 
-export interface YoutubeCommentThread {
+export interface FilesCommentThread {
   snippet: {
     topLevelComment: {
       snippet: {

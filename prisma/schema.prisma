@@ -70,18 +70,6 @@ model Subscription {
   createdAt  DateTime @default(now())
 }
 
-model Transcribation {
-  id                String   @id @default(uuid())
-  fileName          String?
-  content           Json?    @db.JsonB
-  transcriptionText String?  @db.Text
-  code              String?
-  section           String?
-  createdAt         DateTime @default(now())
-  order             Int?     @default(0)
-  tags              String[]
-}
-
 model Scenario {
   id          String    @id @default(uuid())
   content     String?   @db.Text
@@ -100,4 +88,81 @@ enum Status {
   ON_PUBLISHED
   ON_VIDEO_EDITING
   ON_VIDEO_SCRIPT
+}
+
+model Transcribation {
+  id                    String                  @id @default(uuid())
+  fileName              String?
+  content               Json?                   @db.JsonB
+  transcriptionText     String?                 @db.Text
+  code                  String?
+  section               String?
+  createdAt             DateTime                @default(now())
+  order                 Int?                    @default(0)
+  tags                  String[]
+  chapterTranscriptions BookNodeTranscription[]
+}
+
+enum NodeTypeEnum {
+  PART
+  CHAPTER
+  SECTION
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.Text
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  nodes BookNode[]
+
+  @@map("books")
+}
+
+model BookNode {
+  id         Int          @id @default(autoincrement())
+  bookId     Int
+  parentId   Int?
+  nodeType   NodeTypeEnum
+  numberPart String?      @db.VarChar(20)
+  title      String       @db.Text
+  content    String?      @db.Text
+  sortOrder  Int          @default(0)
+  level      Int
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  book     Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  parent   BookNode?  @relation("BookNodeTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children BookNode[] @relation("BookNodeTree")
+
+  chapterTranscriptions BookNodeTranscription[]
+
+  @@unique([bookId, sortOrder])
+  @@index([bookId])
+  @@index([parentId])
+  @@index([level])
+  @@index([bookId, parentId])
+}
+
+model BookNodeTranscription {
+  id               String @id @default(uuid())
+  bookNodeId       Int
+  transcribationId String
+
+  // Связи
+  bookNode       BookNode       @relation(fields: [bookNodeId], references: [id], onDelete: Cascade)
+  transcribation Transcribation @relation(fields: [transcribationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  // Комментарий: связываются именно CHAPTER - у одного CHAPTER может быть много транскрипций
+  // Важно: поле bookNodeId должно ссылаться только на записи BookNode с nodeType = 'CHAPTER'
+
+  @@unique([bookNodeId, transcribationId])
+  @@index([bookNodeId])
+  @@index([transcribationId])
+  @@map("book_node_transcriptions")
 }

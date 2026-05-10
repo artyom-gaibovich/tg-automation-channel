@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { YoutubeService } from './infrastructure/youtube.service';
-import { YoutubeController } from './presentation/controllers/youtube.controller';
-import { YoutubeApi } from './infrastructure/youtube.api';
+import { FilesService } from './infrastructure/files.service';
+import { FilesController } from './presentation/controllers/files.controller';
+import { FilesApi } from './infrastructure/files.api';
 import { CategoryModule } from '../category/category.module';
 import { PrismaModule } from '../shared/persistence/prisma/prisma.module';
 import { MulterModule } from '@nestjs/platform-express';
@@ -21,7 +21,7 @@ import { diskStorage } from 'multer';
     CategoryModule,
     PrismaModule,
   ],
-  controllers: [YoutubeController],
-  providers: [YoutubeApi, YoutubeService],
+  controllers: [FilesController],
+  providers: [FilesApi, FilesService],
 })
-export class YoutubeModule {}
+export class FilesModule {}
