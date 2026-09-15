@@ -1,17 +1,19 @@
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Matches,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { TranscriptionEntity } from '../../domain';
+import { Transform, Type } from 'class-transformer';
+import { TranscriptionEntity, TranscriptionListItem } from '../../domain';
 
 export namespace TranscriptionApiContracts {
   export namespace Api {
@@ -66,23 +68,29 @@ export namespace TranscriptionApiContracts {
           size?: number = 20;
 
           @IsOptional()
-          @IsArray()
-          @IsString({ each: true })
-          @Matches(/^[a-zA-Z0-9_]+(,(asc|desc))?$/, {
-            each: true,
+          @IsString()
+          @Matches(/^[a-zA-Z0-9_]+,(asc|desc)$/, {
             message: 'Sort format should be: property,(asc|desc)',
           })
-          sort?: string[];
+          sort?: string;
         }
 
         export class Body {
-          // Пока пустое
+          @IsOptional()
+          @IsArray()
+          @IsString({ each: true })
+          codes?: string[];
         }
       }
 
       export namespace Response {
         export type Data = {
-          content: Omit<TranscriptionEntity, 'content'>[];
+          content: TranscriptionListItem[];
+          page: number;
+          size: number;
+          totalElements: number;
+          totalPages: number;
+          codes: string[];
         };
       }
     }
@@ -93,6 +101,15 @@ export namespace TranscriptionApiContracts {
           @IsString()
           @IsNotEmpty()
           id: string;
+        }
+
+        export class Query {
+          // Если true — из content убираются offsets/timestamps, а транскрипция
+          // отдаётся единой строкой текста. По умолчанию false для обратной совместимости.
+          @IsOptional()
+          @Transform(({ value }) => value === 'true' || value === true)
+          @IsBoolean()
+          textOnly?: boolean = false;
         }
       }
       export namespace Response {
@@ -144,6 +161,62 @@ export namespace TranscriptionApiContracts {
       export namespace Response {
         export type Data = {
           success: true;
+        };
+      }
+    }
+
+    export namespace TranscribeYoutube {
+      export namespace Request {
+        export class Body {
+          @IsString()
+          @IsNotEmpty()
+          @IsUrl({ require_protocol: true })
+          url: string;
+
+          @IsString()
+          @IsNotEmpty()
+          code: string;
+
+          @IsOptional()
+          @IsArray()
+          @IsString({ each: true })
+          seo_tags?: string[];
+        }
+      }
+
+      export namespace Response {
+        // Загрузка идёт в фоне — сразу возвращаем идентификатор задачи.
+        export type Data = {
+          jobId: string;
+        };
+      }
+    }
+
+    export namespace DownloadYoutubeAudio {
+      export namespace Request {
+        export class Body {
+          @IsString()
+          @IsNotEmpty()
+          @IsUrl({ require_protocol: true })
+          url: string;
+        }
+      }
+    }
+
+    export namespace YoutubeJobStatus {
+      export namespace Request {
+        export class Params {
+          @IsString()
+          @IsNotEmpty()
+          jobId: string;
+        }
+      }
+
+      export namespace Response {
+        export type Data = {
+          status: 'pending' | 'done' | 'error';
+          error?: string;
+          transcriptionId?: string;
         };
       }
     }

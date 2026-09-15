@@ -1,4 +1,4 @@
-import type { TranscriptionEntity } from '../../domain';
+import type { TranscriptionEntity, TranscriptionListItem } from '../../domain';
 import type { JsonValue } from '../../../shared/types';
 
 export declare namespace UseCasePort {
@@ -24,14 +24,27 @@ export declare namespace UseCasePort {
   }
 
   namespace GetTranscriptionList {
+    export interface Input {
+      page: number;
+      size: number;
+      sort?: string;
+      codes?: string[];
+    }
+
     export interface Output {
-      content: Omit<TranscriptionEntity, 'content'>[];
+      content: TranscriptionListItem[];
+      page: number;
+      size: number;
+      totalElements: number;
+      totalPages: number;
+      codes: string[];
     }
   }
 
   namespace GetOneTranscription {
     export interface Input {
       transcriptionId: string;
+      textOnly?: boolean;
     }
 
     export type Output = TranscriptionEntity;
@@ -57,5 +70,32 @@ export declare namespace UseCasePort {
     }
 
     export type Output = void;
+  }
+
+  namespace TranscribeYoutube {
+    export interface Input {
+      url: string;
+      code: string;
+      seoTags: string[];
+    }
+
+    export interface Output {
+      id: string;
+      filename: string;
+      result: string;
+    }
+  }
+
+  namespace DownloadYoutubeAudio {
+    export interface Input {
+      url: string;
+    }
+
+    export interface Output {
+      /** Имя файла внутри папки uploads. */
+      filename: string;
+      /** Человекочитаемое имя файла (заголовок видео + .mp3). */
+      originalName: string;
+    }
   }
 }

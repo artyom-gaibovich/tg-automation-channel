@@ -1,5 +1,10 @@
 import type { JsonValue } from '../../../shared/types';
 
+export type TranscriptionListItem = Omit<TranscriptionEntity, 'content'> & {
+  order: number | null;
+  createdAt: Date;
+};
+
 export class TranscriptionEntity {
   constructor(
     public readonly id: string,

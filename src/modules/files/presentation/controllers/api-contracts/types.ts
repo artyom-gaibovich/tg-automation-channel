@@ -1,8 +1,9 @@
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export namespace YouTubeApiContracts {
+export namespace FilesApiContracts {
   export type TranslateResult = {
+    id: string;
     filename: string;
     result: string;
   };
@@ -27,11 +28,13 @@ export namespace YouTubeApiContracts {
       export namespace Response {
         export type TranslatedItem = {
           file: string;
+          transcriptionId: string;
           result: TranslateResult[];
         };
 
         export type Data = {
           message: string;
+          transcriptionIds: string[];
           results: TranslatedItem[];
         };
       }

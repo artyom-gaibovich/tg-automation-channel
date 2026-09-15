@@ -6,15 +6,23 @@ import {
   GetTranscriptionUseCase,
   ListTranscriptionUseCase,
   GeneratePromptUseCase,
+  TranscribeYoutubeUseCase,
+  DownloadYoutubeAudioUseCase,
   TranscriptionRepository,
   UpdateTranscriptionUseCase,
+  YoutubeJobStore,
 } from './application';
-import { CategoryPrismaRepository, TranscriptionPrismaRepository } from './infrastructure';
+import {
+  CategoryPrismaRepository,
+  TranscriptionPrismaRepository,
+  YoutubeDownloaderService,
+} from './infrastructure';
 import {
   GetTranscriptionFormatter,
   JsonGetTranscriptionFormatter,
   TranscriptionController,
 } from './presentation';
+import { FilesModule } from '../files/files.module';
 
 const application: Provider[] = [
   GeneratePromptUseCase,
@@ -22,8 +30,12 @@ const application: Provider[] = [
   GetTranscriptionUseCase,
   UpdateTranscriptionUseCase,
   DeleteTranscriptionUseCase,
+  TranscribeYoutubeUseCase,
+  DownloadYoutubeAudioUseCase,
+  YoutubeJobStore,
 ];
 const infrastructure: Provider[] = [
+  YoutubeDownloaderService,
   {
     provide: CategoryRepository,
     useClass: CategoryPrismaRepository,
@@ -39,6 +51,7 @@ const infrastructure: Provider[] = [
 ];
 
 @Module({
+  imports: [FilesModule],
   providers: [...infrastructure, ...application],
   controllers: [TranscriptionController],
 })

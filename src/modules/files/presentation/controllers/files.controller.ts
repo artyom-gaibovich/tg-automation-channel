@@ -15,7 +15,7 @@ import path, { extname } from 'path';
 import { mkdir, rm } from 'fs/promises';
 import { existsSync, mkdirSync } from 'fs';
 import sanitize from 'sanitize-filename';
-import { YouTubeApiContracts } from './api-contracts';
+import { FilesApiContracts } from './api-contracts';
 
 export const PATHS = {
   UPLOAD_DIR: path.join(process.cwd(), 'uploads'),
@@ -79,9 +79,13 @@ export class FilesController {
   )
   async uploadMultiple(
     @UploadedFiles() files: Express.Multer.File[],
-    @Body() body: YouTubeApiContracts.Api.UploadMultiple.Request.Body,
+    @Body() body: FilesApiContracts.Api.UploadMultiple.Request.Body,
   ) {
-    const results: Array<{ file: string; result: { filename: string; result: string } }> = [];
+    const results: Array<{
+      file: string;
+      transcriptionId: string;
+      result: { id: string; filename: string; result: string };
+    }> = [];
 
     for (const file of files) {
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
@@ -95,10 +99,15 @@ export class FilesController {
 
       results.push({
         file: file.originalname,
+        transcriptionId: res.id,
         result: res,
       });
     }
 
-    return { message: 'Файлы обработаны', results };
+    return {
+      message: 'Файлы обработаны',
+      transcriptionIds: results.map((r) => r.transcriptionId),
+      results,
+    };
   }
 }

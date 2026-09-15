@@ -9,7 +9,6 @@ const PATHS = {
   ROOT_DIR: process.cwd(),
 } as const;
 
-
 @Injectable()
 export class FilesService {
   private readonly logger = new Logger(FilesService.name);
@@ -106,7 +105,7 @@ export class FilesService {
 ${r1}
       `;
 
-      await this.prismaService.transcribation.create({
+      const created = await this.prismaService.transcribation.create({
         data: {
           fileName: originalName,
           tags: seoTags,
@@ -120,7 +119,7 @@ ${r1}
         console.error('Failed to delete file:', err);
       });
 
-      return { filename, result: result };
+      return { id: created.id, filename, result: result };
     } catch (error) {
       // Пытаемся удалить файл даже в случае ошибки
       await unlink(absPath).catch((err) => {
